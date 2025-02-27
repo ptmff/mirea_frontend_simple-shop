@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Каталог товаров</title>
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css?family=Montserrat:400,600&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Montserrat', sans-serif;
+      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+      color: #333;
+      line-height: 1.6;
+    }
+    h1 {
+      text-align: center;
+      padding: 40px 0 20px;
+      margin: 0;
+      font-size: 2.5em;
+      color: #222;
+    }
+    #catalog {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    .category-group {
+      margin-bottom: 40px;
+      animation: fadeIn 1s ease-in-out;
+    }
+    .category-title {
+      font-size: 2em;
+      margin-bottom: 20px;
+      padding-bottom: 10px;
+      border-bottom: 2px solid #333;
+      opacity: 0;
+      animation: slideIn 0.8s forwards;
+    }
+    .product-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+    .product-card {
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      padding: 20px;
+      flex: 1 1 calc(33.333% - 20px);
+      min-width: 280px;
+      transition: transform 0.3s, box-shadow 0.3s;
+      opacity: 0;
+      animation: fadeInUp 0.8s forwards;
+    }
+    .product-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+    }
+    .product-name {
+      font-size: 1.5em;
+      font-weight: 600;
+      margin-bottom: 10px;
+      color: #222;
+    }
+    .product-price {
+      font-size: 1.2em;
+      color: #27ae60;
+      margin-bottom: 10px;
+    }
+    .product-description {
+      font-size: 1em;
+      color: #555;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateX(-30px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+  </style>
+</head>
+<body>
+  <h1>Каталог товаров</h1>
+  <div id="catalog"></div>
+
+  <script>
+    fetch('/api/products')
+      .then(response => response.json())
+      .then(products => {
+        const catalogDiv = document.getElementById('catalog');
+        // Группируем товары по категориям
+        const categoriesMap = {};
+        products.forEach(product => {
+          product.categories.forEach(category => {
+            if (!categoriesMap[category]) {
+              categoriesMap[category] = [];
+            }
+            categoriesMap[category].push(product);
+          });
+        });
+
+        // Выводим товары по категориям
+        for (const category in categoriesMap) {
+          // Создаем блок для категории
+          const categoryGroup = document.createElement('div');
+          categoryGroup.className = 'category-group';
+
+          // Заголовок категории
+          const categoryTitle = document.createElement('h2');
+          categoryTitle.className = 'category-title';
+          categoryTitle.textContent = category;
+          categoryGroup.appendChild(categoryTitle);
+
+          // Контейнер для карточек товаров
+          const productGrid = document.createElement('div');
+          productGrid.className = 'product-grid';
+
+          // Добавляем карточки товаров для данной категории
+          categoriesMap[category].forEach((product, index) => {
+            const card = document.createElement('div');
+            card.className = 'product-card';
+            // Задержка анимации для плавного появления
+            card.style.animationDelay = `${index * 0.1}s`;
+            card.innerHTML = `
+              <div class="product-name">${product.name}</div>
+              <div class="product-price">$${product.price}</div>
+              <div class="product-description">${product.description}</div>
+            `;
+            productGrid.appendChild(card);
+          });
+
+          categoryGroup.appendChild(productGrid);
+          catalogDiv.appendChild(categoryGroup);
+        }
+      })
+      .catch(error => {
+        console.error('Ошибка получения товаров:', error);
+      });
+  </script>
+</body>
+</html>
