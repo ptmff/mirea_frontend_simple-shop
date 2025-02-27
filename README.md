@@ -40,7 +40,7 @@ online-shop/
 1. **Клонируйте репозиторий:**
 
    ```bash
-   git clone https://github.com/yourusername/online-shop.git
+   git clone https://github.com/ptmff/mirea_frontend_simple-shop
    cd online-shop
    ```
 
