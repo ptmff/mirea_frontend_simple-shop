@@ -41,7 +41,7 @@ online-shop/
 
    ```bash
    git clone https://github.com/ptmff/mirea_frontend_simple-shop
-   cd online-shop
+   cd mirea_frontend_simple-shop
    ```
 
 2. **Запустите Catalog Server:**
