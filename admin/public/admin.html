@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="ru">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -15,16 +16,19 @@
       background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
       color: #333;
     }
+
     h1 {
       text-align: center;
       font-size: 2.5em;
       margin-bottom: 40px;
       color: #222;
     }
+
     .container {
       max-width: 1200px;
       margin: 0 auto;
     }
+
     table {
       width: 100%;
       border-collapse: collapse;
@@ -32,20 +36,25 @@
       background: #fff;
       border-radius: 8px;
       overflow: hidden;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     }
-    th, td {
+
+    th,
+    td {
       padding: 12px 16px;
       text-align: left;
     }
+
     th {
       background-color: #27ae60;
       color: #fff;
       font-weight: 600;
     }
+
     tr:nth-child(even) {
       background: #f9f9f9;
     }
+
     .action-btn {
       padding: 6px 12px;
       border: none;
@@ -53,35 +62,43 @@
       cursor: pointer;
       transition: background 0.3s;
     }
+
     .edit-btn {
       background: #3498db;
       color: #fff;
     }
+
     .edit-btn:hover {
       background: #2980b9;
     }
+
     .delete-btn {
       background: #e74c3c;
       color: #fff;
     }
+
     .delete-btn:hover {
       background: #c0392b;
     }
+
     form {
       background: #fff;
       padding: 20px;
       margin-bottom: 40px;
       border-radius: 8px;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     }
+
     form h2 {
       margin-top: 0;
       color: #27ae60;
     }
+
     label {
       display: block;
       margin: 12px 0 6px;
     }
+
     input[type="text"],
     input[type="number"] {
       width: 100%;
@@ -90,11 +107,13 @@
       border-radius: 4px;
       transition: border-color 0.3s;
     }
+
     input[type="text"]:focus,
     input[type="number"]:focus {
       border-color: #27ae60;
       outline: none;
     }
+
     button {
       padding: 10px 20px;
       border: none;
@@ -105,12 +124,15 @@
       cursor: pointer;
       transition: background 0.3s;
     }
+
     button:hover {
       background: #1e8449;
     }
+
     button#cancelEdit {
       background: #95a5a6;
     }
+
     button#cancelEdit:hover {
       background: #7f8c8d;
     }
@@ -125,27 +147,31 @@
       background: #fff;
       border: 1px solid #ccc;
       border-radius: 8px;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
       display: flex;
       flex-direction: column;
       overflow: hidden;
       z-index: 1000;
     }
+
     #chatMessages {
       flex: 1;
       padding: 10px;
       overflow-y: auto;
       border-bottom: 1px solid #ccc;
     }
+
     #chatForm {
       display: flex;
     }
+
     #chatForm input {
       flex: 1;
       padding: 10px;
       border: none;
       border-top: 1px solid #ccc;
     }
+
     #chatForm button {
       padding: 10px;
       border: none;
@@ -155,10 +181,11 @@
     }
   </style>
 </head>
+
 <body>
   <div class="container">
     <h1>Панель администратора</h1>
-    
+
     <h2>Существующие товары</h2>
     <table id="productsTable">
       <thead>
@@ -175,7 +202,7 @@
         <!-- Список товаров будет загружен сюда -->
       </tbody>
     </table>
-    
+
     <h2>Добавить товар</h2>
     <form id="addProductForm">
       <label>Название:</label>
@@ -188,7 +215,7 @@
       <input type="text" name="categories" required>
       <button type="submit">Добавить товар</button>
     </form>
-    
+
     <h2>Редактировать товар</h2>
     <form id="editProductForm">
       <!-- Скрытое поле для ID -->
@@ -276,7 +303,7 @@
     }
 
     // Обработка добавления товара
-    document.getElementById('addProductForm').addEventListener('submit', function(e) {
+    document.getElementById('addProductForm').addEventListener('submit', function (e) {
       e.preventDefault();
       const formData = new FormData(this);
       const product = {
@@ -285,52 +312,52 @@
         description: formData.get('description'),
         categories: formData.get('categories').split(',').map(cat => cat.trim())
       };
-      
+
       fetch('/api/products', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(product)
       })
-      .then(res => res.json())
-      .then(data => {
-        alert(data.message);
-        this.reset();
-        loadProducts();
-      })
-      .catch(err => console.error('Ошибка добавления товара:', err));
+        .then(res => res.json())
+        .then(data => {
+          alert(data.message);
+          this.reset();
+          loadProducts();
+        })
+        .catch(err => console.error('Ошибка добавления товара:', err));
     });
 
     // Обработка редактирования товара
-    document.getElementById('editProductForm').addEventListener('submit', function(e) {
+    document.getElementById('editProductForm').addEventListener('submit', function (e) {
       e.preventDefault();
       const formData = new FormData(this);
       const id = formData.get('id');
       const product = {};
-      if(formData.get('name')) product.name = formData.get('name');
-      if(formData.get('price')) product.price = Number(formData.get('price'));
-      if(formData.get('description')) product.description = formData.get('description');
-      if(formData.get('categories')) product.categories = formData.get('categories').split(',').map(cat => cat.trim());
-      
+      if (formData.get('name')) product.name = formData.get('name');
+      if (formData.get('price')) product.price = Number(formData.get('price'));
+      if (formData.get('description')) product.description = formData.get('description');
+      if (formData.get('categories')) product.categories = formData.get('categories').split(',').map(cat => cat.trim());
+
       fetch(`/api/products/${id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(product)
       })
-      .then(res => res.json())
-      .then(data => {
-        if(data.error) {
-          alert(data.error);
-        } else {
-          alert(data.message);
-          this.reset();
-          loadProducts();
-        }
-      })
-      .catch(err => console.error('Ошибка редактирования товара:', err));
+        .then(res => res.json())
+        .then(data => {
+          if (data.error) {
+            alert(data.error);
+          } else {
+            alert(data.message);
+            this.reset();
+            loadProducts();
+          }
+        })
+        .catch(err => console.error('Ошибка редактирования товара:', err));
     });
 
     // Обработка отмены редактирования
-    document.getElementById('cancelEdit').addEventListener('click', function() {
+    document.getElementById('cancelEdit').addEventListener('click', function () {
       document.getElementById('editProductForm').reset();
     });
 
@@ -338,13 +365,15 @@
     loadProducts();
 
     // Реализация WebSocket чата
-    const ws = new WebSocket('ws://localhost:5000');
+    // Создаем WebSocket с указанием роли "admin"
+    const ws = new WebSocket('ws://localhost:5000?role=admin');
+
     const chatMessages = document.getElementById('chatMessages');
     const chatForm = document.getElementById('chatForm');
     const chatInput = document.getElementById('chatInput');
 
     ws.onopen = () => {
-      console.log('Подключено к WebSocket серверу');
+      console.log('Подключено к WebSocket серверу как админ');
     };
 
     ws.onmessage = (event) => {
@@ -364,4 +393,5 @@
     });
   </script>
 </body>
+
 </html>

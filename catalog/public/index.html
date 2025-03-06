@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="ru">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -20,26 +21,30 @@
       background: #fff;
       border: 1px solid #ccc;
       border-radius: 8px;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
       display: flex;
       flex-direction: column;
       overflow: hidden;
     }
+
     #chatMessages {
       flex: 1;
       padding: 10px;
       overflow-y: auto;
       border-bottom: 1px solid #ccc;
     }
+
     #chatForm {
       display: flex;
     }
+
     #chatForm input {
       flex: 1;
       padding: 10px;
       border: none;
       border-top: 1px solid #ccc;
     }
+
     #chatForm button {
       padding: 10px;
       border: none;
@@ -49,6 +54,7 @@
     }
   </style>
 </head>
+
 <body>
   <h1>Каталог товаров</h1>
   <div id="catalog"></div>
@@ -77,28 +83,29 @@
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ query })
     })
-    .then(response => response.json())
-    .then(result => {
-      const catalogDiv = document.getElementById('catalog');
-      result.data.products.forEach(product => {
-        const card = document.createElement('div');
-        card.style.border = "1px solid #ccc";
-        card.style.padding = "10px";
-        card.style.margin = "10px";
-        card.innerHTML = `<strong>${product.name}</strong><br>$${product.price}`;
-        catalogDiv.appendChild(card);
-      });
-    })
-    .catch(error => console.error('Ошибка запроса GraphQL:', error));
+      .then(response => response.json())
+      .then(result => {
+        const catalogDiv = document.getElementById('catalog');
+        result.data.products.forEach(product => {
+          const card = document.createElement('div');
+          card.style.border = "1px solid #ccc";
+          card.style.padding = "10px";
+          card.style.margin = "10px";
+          card.innerHTML = `<strong>${product.name}</strong><br>$${product.price}`;
+          catalogDiv.appendChild(card);
+        });
+      })
+      .catch(error => console.error('Ошибка запроса GraphQL:', error));
 
     // WebSocket чат
-    const ws = new WebSocket('ws://localhost:5000');
+    const ws = new WebSocket('ws://localhost:5000?role=client');
+
     const chatMessages = document.getElementById('chatMessages');
     const chatForm = document.getElementById('chatForm');
     const chatInput = document.getElementById('chatInput');
 
     ws.onopen = () => {
-      console.log('Подключено к WebSocket серверу');
+      console.log('Подключено к WebSocket серверу как клиент');
     };
 
     ws.onmessage = (event) => {
@@ -118,4 +125,5 @@
     });
   </script>
 </body>
+
 </html>
